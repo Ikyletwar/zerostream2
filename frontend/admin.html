@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#0a0a0f">
+    <meta name="description" content="Admin Panel - Kelola user dan password global ZeroStream">
+    <title>ZeroStream · Admin Panel</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACQAAAAkCAYAAADhAJiYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAClSURBVFhH7ZgxDoAgDEW5AxN34SwuLs7GkZO7iYMJpAwhpX0WaGmSr0mT9kPLA3/8WFtJKSmlpJSSUkrpDWWgZ+gNeoPeoDfoDXqD3qA3yKnQanSYWXEJERERERG9p+zXHWMZ6Bl6g96gN+gNeoPeoDfoDXqD3qA3yKnQanSYWXEJERERERG9p+zXHWMZ6Bl6g96gN+gN+o+eoBfoBXqBXqA/UJ+67KtSSkopJaWU3pT/BuotCiBJZgAAAABJRU5ErkJggg==">
+    
+    <style>
+        /* Admin panel specific styles */
+        .admin-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1.5rem;
+        }
+        
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border-light);
+        }
+        
+        .admin-header h1 {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.6rem;
+        }
+        
+        .admin-stats {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        
+        .stat-chip {
+            background: var(--bg-card);
+            border: 1px solid var(--border-light);
+            border-radius: 40px;
+            padding: 0.4rem 1rem;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .stat-chip i {
+            color: var(--accent);
+        }
+        
+        .action-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .btn-primary {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 0.6rem 1.2rem;
+            border-radius: 40px;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.2s;
+        }
+        
+        .btn-primary:hover {
+            background: var(--accent-hover);
+            transform: translateY(-2px);
+        }
+        
+        .btn-secondary {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-medium);
+            color: var(--text-primary);
+            padding: 0.6rem 1.2rem;
+            border-radius: 40px;
+            font-weight: 500;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.2s;
+        }
+        
+        .btn-secondary:hover {
+            background: var(--bg-elevated);
+        }
+        
+        .btn-danger {
+            background: transparent;
+            border: 1px solid var(--error);
+            color: var(--error);
+        }
+        
+        .btn-danger:hover {
+            background: rgba(239, 68, 68, 0.1);
+        }
+        
+        /* Table styles */
+        .users-table-wrapper {
+            overflow-x: auto;
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border-light);
+            background: var(--bg-card);
+        }
+        
+        .users-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+        }
+        
+        .users-table th,
+        .users-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-light);
+        }
+        
+        .users-table th {
+            background: var(--bg-tertiary);
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+        
+        .users-table tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .users-table tr:hover {
+            background: var(--bg-tertiary);
+        }
+        
+        .status-badge {
+            display: inline-block;
+            padding: 0.2rem 0.6rem;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+        
+        .status-active {
+            background: rgba(16, 185, 129, 0.15);
+            color: #10b981;
+        }
+        
+        .status-suspended {
+            background: rgba(245, 158, 11, 0.15);
+            color: #f59e0b;
+        }
+        
+        .status-blocked {
+            background: rgba(239, 68, 68, 0.15);
+            color: #ef4444;
+        }
+        
+        .role-badge-admin {
+            background: var(--accent);
+            color: white;
+            padding: 0.2rem 0.5rem;
+            border-radius: 20px;
+            font-size: 0.7rem;
+        }
+        
+        .role-badge-user {
+            background: var(--bg-elevated);
+            color: var(--text-secondary);
+            padding: 0.2rem 0.5rem;
+            border-radius: 20px;
+            font-size: 0.7rem;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+        
+        .icon-btn-small {
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            padding: 0.3rem 0.6rem;
+            border-radius: var(--radius-sm);
+            transition: all 0.2s;
+            color: var(--text-secondary);
+        }
+        
+        .icon-btn-small:hover {
+            background: var(--bg-elevated);
+            color: var(--accent);
+        }
+        
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal.active {
+            display: flex;
+        }
+        
+        .modal-content {
+            background: var(--bg-card);
+            border-radius: var(--radius-lg);
+            max-width: 500px;
+            width: 90%;
+            padding: 1.5rem;
+            border: 1px solid var(--border-light);
+            animation: modalFadeIn 0.2s ease;
+        }
+        
+        @keyframes modalFadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .modal-header h3 {
+            font-size: 1.25rem;
+        }
+        
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-secondary);
+        }
+        
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+        
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 0.7rem;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-medium);
+            border-radius: var(--radius-md);
+            color: var(--text-primary);
+            font-size: 0.9rem;
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+        
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+        
+        .loading-overlay {
+            text-align: center;
+            padding: 3rem;
+            color: var(--text-muted);
+        }
+        
+        .empty-row {
+            text-align: center;
+            padding: 3rem;
+            color: var(--text-muted);
+        }
+        
+        .global-password-section {
+            background: var(--bg-secondary);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            margin-top: 2rem;
+            border: 1px solid var(--border-light);
+        }
+        
+        .global-password-section h3 {
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .global-password-form {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            align-items: flex-end;
+        }
+        
+        .global-password-form .form-group {
+            flex: 1;
+            min-width: 200px;
+            margin-bottom: 0;
+        }
+        
+        @media (max-width: 768px) {
+            .admin-container {
+                padding: 1rem;
+            }
+            .users-table th,
+            .users-table td {
+                padding: 0.75rem;
+            }
+            .action-buttons {
+                flex-direction: column;
+            }
+            .global-password-form {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .global-password-form .form-group {
+                margin-bottom: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="site-header" aria-label="Main header">
+        <div class="container header-container">
+            <div class="header-left">
+                <button class="back-btn" id="back-btn" aria-label="Go back">
+                    <i class="fas fa-arrow-left"></i>
+                </button>
+                <a href="index.html" class="logo"><i class="fas fa-film"></i> ZeroStream</a>
+            </div>
+            <nav class="desktop-nav">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="schedule.html" class="nav-link">Schedule</a>
+                <a href="history.html" class="nav-link">History</a>
+                <a href="about.html" class="nav-link">About</a>
+            </nav>
+            <div class="header-actions">
+                <button class="icon-btn settings-icon" id="settings-icon"><i class="fas fa-sliders-h"></i></button>
+                <div id="user-dropdown-container"></div>
+                <button class="hamburger" id="hamburger-menu" aria-label="Menu" aria-expanded="false">
+                    <span></span><span></span><span></span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <div id="mobile-nav" class="mobile-nav" hidden>
+        <div class="mobile-nav-header">
+            <span class="mobile-nav-title">Menu</span>
+            <button class="close-nav" id="close-nav-btn"><i class="fas fa-times"></i></button>
+        </div>
+        <nav class="mobile-nav-links">
+            <a href="index.html" class="mobile-nav-link"><i class="fas fa-home"></i> Home</a>
+            <a href="schedule.html" class="mobile-nav-link"><i class="fas fa-calendar-alt"></i> Schedule</a>
+            <a href="history.html" class="mobile-nav-link"><i class="fas fa-history"></i> History</a>
+            <a href="about.html" class="mobile-nav-link"><i class="fas fa-info-circle"></i> About</a>
+            <button class="mobile-nav-link" id="mobile-bookmarks-link"><i class="fas fa-bookmark"></i> Bookmarks</button>
+        </nav>
+    </div>
+
+    <main class="main-content">
+        <div class="admin-container">
+            <div class="admin-header">
+                <h1><i class="fas fa-shield-alt"></i> Admin Panel</h1>
+                <div class="admin-stats">
+                    <div class="stat-chip" id="total-users-stat"><i class="fas fa-users"></i> <span>Loading...</span></div>
+                </div>
+            </div>
+
+            <div class="action-bar">
+                <button class="btn-primary" id="add-user-btn"><i class="fas fa-plus"></i> Add User</button>
+                <button class="btn-secondary" id="refresh-users-btn"><i class="fas fa-sync-alt"></i> Refresh</button>
+            </div>
+
+            <div class="users-table-wrapper">
+                <table class="users-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Username</th>
+                            <th>Role</th>
+                            <th>Status</th>
+                            <th>Created At</th>
+                            <th>Last Login</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="users-table-body">
+                        <tr><td colspan="7" class="loading-overlay"><i class="fas fa-spinner fa-pulse"></i> Loading users...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Global Password Section -->
+            <div class="global-password-section">
+                <h3><i class="fas fa-key"></i> Global Login Password</h3>
+                <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 1rem;">Password ini digunakan oleh SEMUA user untuk login (bersama dengan username masing-masing).</p>
+                <div class="global-password-form">
+                    <div class="form-group">
+                        <label>New Global Password</label>
+                        <input type="password" id="new-global-password" placeholder="Minimal 4 karakter">
+                    </div>
+                    <div class="form-group">
+                        <label>Confirm Password</label>
+                        <input type="password" id="confirm-global-password" placeholder="Ulangi password">
+                    </div>
+                    <button class="btn-primary" id="update-global-password-btn"><i class="fas fa-save"></i> Update</button>
+                </div>
+                <div id="global-password-status" style="margin-top: 0.5rem; font-size: 0.75rem;"></div>
+            </div>
+        </div>
+    </main>
+
+    <div id="settings-panel" class="settings-panel" hidden>
+        <div class="settings-header">
+            <h3><i class="fas fa-cog"></i> Preferences</h3>
+            <button class="close-btn" id="close-settings"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="settings-body">
+            <div class="setting-item">
+                <label><i class="fas fa-moon"></i> Theme</label>
+                <div class="toggle-buttons">
+                    <button data-theme="dark" class="theme-btn">Dark</button>
+                    <button data-theme="light" class="theme-btn">Light</button>
+                </div>
+            </div>
+            <div class="setting-item">
+                <label><i class="fas fa-th-large"></i> Layout</label>
+                <div class="toggle-buttons">
+                    <button data-layout="grid" class="layout-mode-btn">Grid</button>
+                    <button data-layout="list" class="layout-mode-btn">List</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast-container" class="toast-container"></div>
+
+    <!-- Modal Add/Edit User -->
+    <div id="user-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modal-title">Add User</h3>
+                <button class="close-modal" id="close-modal-btn">&times;</button>
+            </div>
+            <form id="user-form">
+                <input type="hidden" id="user-id" value="">
+                <div class="form-group">
+                    <label>Username</label>
+                    <input type="text" id="username-input" required autocomplete="off">
+                </div>
+                <div class="form-group" id="password-field-group">
+                    <label>Password</label>
+                    <input type="password" id="password-input" placeholder="Minimal 4 karakter">
+                </div>
+                <div class="form-group">
+                    <label>Role</label>
+                    <select id="role-input">
+                        <option value="user">User</option>
+                        <option value="admin">Admin</option>
+                    </select>
+                </div>
+                <div class="form-group" id="status-field-group" style="display: none;">
+                    <label>Status</label>
+                    <select id="status-input">
+                        <option value="active">Active</option>
+                        <option value="suspended">Suspended</option>
+                        <option value="blocked">Blocked</option>
+                    </select>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn-secondary" id="cancel-modal-btn">Cancel</button>
+                    <button type="submit" class="btn-primary">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="js/common.js"></script>
+    <script src="js/settings.js"></script>
+    <script src="js/websocket.js"></script>
+    <script src="js/admin.js"></script>
+</body>
+</html>

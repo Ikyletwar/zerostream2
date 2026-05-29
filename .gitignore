@@ -1,0 +1,38 @@
+# Dependencies
+node_modules/
+
+# Database & cache
+backend/data/*.db
+backend/data/*.db-journal
+backend/data/ongoing_schedule_cache.json
+backend/logs/
+
+# Environment
+.env
+
+# Cookies
+cookies.txt
+
+# Scraping checkpoint
+scripts/scraping/checkpoint*.json
+scripts/scraping/*_checkpoint.json
+
+# OS/Editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+
+# Logs
+*.log
+npm-debug.log*
+logs/
+
+# Backup
+*.bak
+*.tmp
+*.orig
+
+# PM2
+.pm2/

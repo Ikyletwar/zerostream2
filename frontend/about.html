@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#0a0a0f">
+    <meta name="description"
+        content="Tentang ZeroStream - Platform streaming anime modern yang dibangun oleh Hizkia Letwar, siswa SMK Negeri 1 Maluku Tengah. Real-time, premium, tanpa iklan.">
+    <title>ZeroStream · Tentang — Hizkia Letwar & ZeroStream</title>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Premium Font: Plus Jakarta Sans (modern, elegan) + Inter fallback -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <!-- Global style.css (dark/light theme) -->
+    <link rel="stylesheet" href="css/style.css">
+
+    <!-- GSAP Premium Animation Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+    <link rel="icon" type="image/png"
+        href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACQAAAAkCAYAAADhAJiYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAClSURBVFhH7ZgxDoAgDEW5AxN34SwuLs7GkZO7iYMJpAwhpX0WaGmSr0mT9kPLA3/8WFtJKSmlpJSSUkrpDWWgZ+gNeoPeoDfoDXqD3qA3yKnQanSYWXEJERERERG9p+zXHWMZ6Bl6g96gN+gNeoPeoDfoDXqD3qA3yKnQanSYWXEJERERERG9p+zXHWMZ6Bl6g96gN+gN+o+eoBfoBXqBXqA/UJ+67KtSSkopJaWU3pT/BuotCiBJZgAAAABJRU5ErkJggg==">
+
+    <style>
+        /* Reset & Base */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', 'Inter', system-ui, -apple-system, sans-serif;
+        }
+
+        /* Custom scroll progress */
+        .scroll-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: 3px;
+            background: var(--accent);
+            z-index: 1000;
+            transition: width 0.1s linear;
+        }
+
+        /* Back to top */
+        .back-to-top {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: var(--bg-elevated);
+            border: 1px solid var(--border-medium);
+            color: var(--text-primary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 99;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            backdrop-filter: blur(8px);
+        }
+
+        .back-to-top.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .back-to-top:hover {
+            background: var(--accent);
+            color: white;
+            transform: translateY(-4px);
+        }
+
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+
+        .main-content {
+            padding: 2rem 0 4rem;
+        }
+
+        .about-section {
+            margin-bottom: 5rem;
+        }
+
+        .about-section h2 {
+            font-size: 1.75rem;
+            margin-bottom: 1.75rem;
+            letter-spacing: -0.02em;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            border-left: 3px solid var(--accent);
+            padding-left: 1rem;
+        }
+
+        /* Hero */
+        .about-hero {
+            text-align: center;
+            margin-bottom: 4rem;
+            padding: 1rem 0;
+        }
+
+        .about-hero h1 {
+            font-size: clamp(2.2rem, 6vw, 3.8rem);
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--text-primary) 0%, var(--accent) 100%);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+
+        .tagline {
+            font-size: 1.125rem;
+            color: var(--text-secondary);
+            max-width: 700px;
+            margin: 0 auto 1.75rem;
+            line-height: 1.5;
+        }
+
+        /* Stats Cards */
+        .stats-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .stat-card {
+            background: var(--bg-card);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem 1rem;
+            text-align: center;
+            border: 1px solid var(--border-light);
+            transition: all 0.2s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--accent);
+        }
+
+        .stat-number {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--accent);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Owner Profile Premium */
+        .owner-profile {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2.5rem;
+            align-items: center;
+            background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary));
+            border-radius: var(--radius-xl);
+            padding: 2rem;
+            border: 1px solid var(--border-light);
+            margin: 1.5rem 0;
+        }
+
+        .owner-avatar-large {
+            flex-shrink: 0;
+            width: 140px;
+            height: 140px;
+            background: var(--bg-elevated);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 3px solid var(--accent);
+            box-shadow: var(--shadow-md);
+            overflow: hidden;
+        }
+
+        .owner-avatar-large img {
+            width: 125%;
+            height: 125%;
+            border-radius: 50%;
+            object-fit: cover;
+            object-position: center;
+        }
+
+        .owner-info-detailed h3 {
+            font-size: 1.8rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .owner-badge {
+            display: inline-block;
+            background: rgba(233, 69, 96, 0.12);
+            color: var(--accent);
+            padding: 0.2rem 0.8rem;
+            border-radius: 40px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin: 0.5rem 0;
+        }
+
+        .owner-social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .owner-social-links a {
+            color: var(--text-secondary);
+            transition: color 0.2s;
+            font-size: 1.3rem;
+        }
+
+        .owner-social-links a:hover {
+            color: var(--accent);
+        }
+
+        .owner-quote {
+            margin-top: 1rem;
+            font-style: normal;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            border-left: 2px solid var(--accent);
+            padding-left: 1rem;
+        }
+
+        /* Tentang ZeroStream Section */
+        .about-platform {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .info-card {
+            background: var(--bg-card);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            border: 1px solid var(--border-light);
+            transition: all 0.2s;
+        }
+
+        .info-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--accent);
+        }
+
+        .info-card i {
+            font-size: 2rem;
+            color: var(--accent);
+            margin-bottom: 1rem;
+        }
+
+        .info-card h3 {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Tech Table */
+        .tech-table-wrapper {
+            overflow-x: auto;
+            margin: 1.5rem 0;
+        }
+
+        .tech-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            background: var(--bg-secondary);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            border: 1px solid var(--border-light);
+        }
+
+        .tech-table th {
+            text-align: left;
+            padding: 1rem 1.25rem;
+            background: var(--bg-tertiary);
+            font-weight: 600;
+        }
+
+        .tech-table td {
+            padding: 1rem 1.25rem;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .tech-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .tech-icon {
+            width: 28px;
+            display: inline-block;
+            margin-right: 0.5rem;
+            color: var(--accent);
+        }
+
+        /* Feature Grid */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .feature-card {
+            background: var(--bg-card);
+            border-radius: var(--radius-md);
+            padding: 1.5rem;
+            border: 1px solid var(--border-light);
+            transition: all 0.2s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--accent);
+        }
+
+        .feature-icon {
+            font-size: 2rem;
+            color: var(--accent);
+            margin-bottom: 1rem;
+        }
+
+        /* FAQ */
+        .faq-list {
+            margin: 1.5rem 0;
+        }
+
+        .faq-item {
+            background: var(--bg-secondary);
+            border-radius: var(--radius-md);
+            margin-bottom: 0.75rem;
+            border: 1px solid var(--border-light);
+            overflow: hidden;
+        }
+
+        .faq-question {
+            width: 100%;
+            text-align: left;
+            padding: 1rem 1.25rem;
+            background: transparent;
+            border: none;
+            font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            color: var(--text-primary);
+        }
+
+        .faq-question i {
+            transition: transform 0.25s ease;
+        }
+
+        .faq-item.open .faq-question i {
+            transform: rotate(180deg);
+        }
+
+        .faq-answer {
+            max-height: 0;
+            padding: 0 1.25rem;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+            color: var(--text-secondary);
+        }
+
+        .faq-item.open .faq-answer {
+            max-height: 150px;
+            padding: 0 1.25rem 1rem 1.25rem;
+        }
+
+        /* Footer CTA */
+        .footer-cta {
+            background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary));
+            border-radius: var(--radius-xl);
+            padding: 2.5rem 2rem;
+            text-align: center;
+            border: 1px solid var(--border-light);
+        }
+
+        .metrics-banner {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .metric-number {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: var(--accent);
+        }
+
+        /* GSAP reveal classes */
+        .gsap-reveal {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 1rem;
+            }
+
+            .about-section {
+                margin-bottom: 3rem;
+            }
+
+            .owner-profile {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .owner-social-links {
+                justify-content: center;
+            }
+
+            .owner-quote {
+                text-align: left;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="scroll-progress" id="scrollProgress"></div>
+    <button class="back-to-top" id="backToTopBtn"><i class="fas fa-arrow-up"></i></button>
+
+    <header class="site-header">
+        <div class="container header-container">
+            <div class="header-left">
+                <button class="back-btn" id="back-btn"><i class="fas fa-arrow-left"></i></button>
+                <a href="index.html" class="logo"><i class="fas fa-film"></i> ZeroStream</a>
+            </div>
+            <nav class="desktop-nav">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="schedule.html" class="nav-link">Schedule</a>
+                <a href="history.html" class="nav-link">History</a>
+                <a href="about.html" class="nav-link active">About</a>
+            </nav>
+            <div class="header-actions">
+                <button class="icon-btn settings-icon" id="settings-icon"><i class="fas fa-sliders-h"></i></button>
+                <div id="user-dropdown-container"></div>
+                <button class="hamburger" id="hamburger-menu"><span></span><span></span><span></span></button>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <div class="container">
+            <!-- Hero Section -->
+            <div class="about-hero gsap-reveal">
+                <h1>Tentang ZeroStream</h1>
+                <p class="tagline">Streaming anime subtitle Indonesia, real-time, tanpa iklan — dibuat dengan dedikasi
+                    oleh seorang siswa SMK dari Maluku Tengah.</p>
+                <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                    <a href="index.html" class="btn-primary"><i class="fas fa-play"></i> Mulai Streaming</a>
+                    <a href="schedule.html" class="btn-primary"
+                        style="background: transparent; border: 1px solid var(--border-medium);">Lihat Schedule</a>
+                </div>
+            </div>
+
+            <!-- Live Statistics -->
+            <section class="about-section gsap-reveal" id="statsSection">
+                <h2><i class="fas fa-chart-line"></i> Live Statistics</h2>
+                <div class="stats-cards" id="statsContainer">
+                    <div class="stat-card">
+                        <div class="stat-number" id="statTotalAnime">0</div>
+                        <div class="stat-label">Total Anime</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="statTotalEpisodes">0</div>
+                        <div class="stat-label">Total Episode</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="statOngoing">0</div>
+                        <div class="stat-label">Ongoing</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="statComplete">0</div>
+                        <div class="stat-label">Complete</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="statLastUpdated">—</div>
+                        <div class="stat-label">Last Updated</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Owner Profile (Central) -->
+            <section class="about-section gsap-reveal">
+                <h2><i class="fas fa-user-astronaut"></i> Creator & Founder</h2>
+                <div class="owner-profile">
+                    <div class="owner-avatar-large" id="ownerAvatar">
+                        <!-- Base64 image: ganti di sini sekali untuk semua -->
+                        <img src="images/profile.jpg"
+                            alt="Hizkia Letwar">
+                    </div>
+                    <div class="owner-info-detailed">
+                        <h3>Hizkia Letwar</h3>
+                        <span class="owner-badge"><i class="fas fa-graduation-cap"></i> SMK Negeri 1 Maluku Tengah -
+                            TJKT</span>
+                        <div class="owner-social-links">
+                            <a href="https://www.tiktok.com/@Ikyletwar" target="_blank"><i
+                                    class="fab fa-tiktok"></i></a>
+                            <a href="https://www.instagram.com/ikyletwar" target="_blank"><i
+                                    class="fab fa-instagram"></i></a>
+                            <a href="https://wa.me/6282322395337" target="_blank"><i class="fab fa-whatsapp"></i></a>
+                            <a href="https://github.com/ikyletwar" target="_blank"><i class="fab fa-github"></i></a>
+                        </div>
+                        <div class="owner-quote">
+                            “Saya seorang vibe coder dan siswa SMK yang percaya bahwa batasan hanya ada di pikiran.
+                            ZeroStream saya bangun dari nol dalam waktu singkat untuk membuktikan bahwa siswa SMK pun
+                            bisa menciptakan platform streaming profesional dengan teknologi real-time. Proyek ini open
+                            source dan gratis selamanya.”
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Tentang ZeroStream (Platform Overview) -->
+            <section class="about-section gsap-reveal">
+                <h2><i class="fas fa-info-circle"></i> Tentang Platform</h2>
+                <div class="about-platform">
+                    <div class="info-card"><i class="fas fa-bullseye"></i>
+                        <h3>Misi</h3>
+                        <p>Menyediakan streaming anime subtitle Indonesia tanpa iklan, real-time, dan dapat diakses
+                            semua kalangan.</p>
+                    </div>
+                    <div class="info-card"><i class="fas fa-heart"></i>
+                        <h3>Motivasi</h3>
+                        <p>Hobi menonton anime dan keinginan belajar coding yang membara. ZeroStream adalah wadah
+                            belajar sekaligus karya nyata.</p>
+                    </div>
+                    <div class="info-card"><i class="fas fa-code-branch"></i>
+                        <h3>Open Source</h3>
+                        <p>Seluruh kode tersedia di GitHub. Siapa pun bisa berkontribusi atau mempelajari arsitektur
+                            real-time WebSocket + SQLite.</p>
+                    </div>
+                    <div class="info-card"><i class="fas fa-cloud-upload-alt"></i>
+                        <h3>Hosting & Domain</h3>
+                        <p>Dideploy menggunakan PM2 + VPS pribadi, dengan database SQLite dan scheduler otomatis.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Technology Stack -->
+            <section class="about-section gsap-reveal">
+                <h2><i class="fas fa-cogs"></i> Teknologi & Arsitektur</h2>
+                <div class="tech-table-wrapper">
+                    <table class="tech-table">
+                        <thead>
+                            <tr>
+                                <th>Teknologi</th>
+                                <th>Keunggulan</th>
+                                <th>Alasan Pilihan</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><i class="fab fa-node tech-icon"></i> Node.js + Express</td>
+                                <td>Non-blocking I/O, ringan</td>
+                                <td>Ideal untuk real-time dan scraping</td>
+                            </tr>
+                            <tr>
+                                <td><i class="fas fa-database tech-icon"></i> SQLite (WAL)</td>
+                                <td>Portable, ACID, cepat</td>
+                                <td>Tanpa server terpisah, cocok untuk single-instance</td>
+                            </tr>
+                            <tr>
+                                <td><i class="fas fa-broadcast-tower tech-icon"></i> WebSocket (ws)</td>
+                                <td>Real-time, low latency</td>
+                                <td>Broadcast episode baru ke semua client</td>
+                            </tr>
+                            <tr>
+                                <td><i class="fas fa-robot tech-icon"></i> Axios + Cheerio</td>
+                                <td>Scraping adaptif</td>
+                                <td>Update otomatis dari nimegami.id</td>
+                            </tr>
+                            <tr>
+                                <td><i class="fab fa-js tech-icon"></i> Vanilla JS + CSS</td>
+                                <td>Tanpa framework, performa maksimal</td>
+                                <td>Kontrol penuh, bundle kecil</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Premium Features -->
+            <section class="about-section gsap-reveal">
+                <h2><i class="fas fa-star"></i> Fitur Premium</h2>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fas fa-broadcast-tower"></i></div>
+                        <h3>Real-time Feed</h3>
+                        <p>Notifikasi episode baru via WebSocket</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fas fa-robot"></i></div>
+                        <h3>Scraper Otomatis</h3>
+                        <p>Update setiap 10 menit, tanpa intervensi manual</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fas fa-bookmark"></i></div>
+                        <h3>Bookmark & History</h3>
+                        <p>Simpan anime favorit dan lanjutkan episode</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fas fa-palette"></i></div>
+                        <h3>Dark/Light Theme</h3>
+                        <p>Transisi mulus, nyaman di mata</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fas fa-mobile-alt"></i></div>
+                        <h3>Responsive Premium</h3>
+                        <p>Grid / List view, mobile first</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fas fa-chart-line"></i></div>
+                        <h3>Statistik Live</h3>
+                        <p>Total anime, episode, ongoing, complete</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- FAQ -->
+            <section class="about-section gsap-reveal">
+                <h2><i class="fas fa-question-circle"></i> Frequently Asked Questions</h2>
+                <div class="faq-list" id="faqContainer">
+                    <div class="faq-item"><button class="faq-question">Apakah ZeroStream gratis? <i
+                                class="fas fa-chevron-down"></i></button>
+                        <div class="faq-answer">Ya, 100% gratis tanpa iklan selamanya.</div>
+                    </div>
+                    <div class="faq-item"><button class="faq-question">Siapa pembuat ZeroStream? <i
+                                class="fas fa-chevron-down"></i></button>
+                        <div class="faq-answer">Hizkia Letwar, siswa SMK Negeri 1 Maluku Tengah, jurusan TJKT.</div>
+                    </div>
+                    <div class="faq-item"><button class="faq-question">Darimana sumber video? <i
+                                class="fas fa-chevron-down"></i></button>
+                        <div class="faq-answer">Sumber dari nimegami.id, kami hanya menampilkan embed.</div>
+                    </div>
+                    <div class="faq-item"><button class="faq-question">Apakah data saya aman? <i
+                                class="fas fa-chevron-down"></i></button>
+                        <div class="faq-answer">Data disimpan di local storage browser Anda, tidak ada pelacakan.</div>
+                    </div>
+                    <div class="faq-item"><button class="faq-question">Bagaimana cara request anime? <i
+                                class="fas fa-chevron-down"></i></button>
+                        <div class="faq-answer">Hubungi sosial media @ikyletwar.</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Footer CTA + Metrics -->
+            <section class="about-section gsap-reveal">
+                <div class="footer-cta">
+                    <div class="metrics-banner">
+                        <div class="metric-item">
+                            <div class="metric-number" id="footerTotalAnime">—</div>
+                            <div class="metric-label">Total Anime</div>
+                        </div>
+                        <div class="metric-item">
+                            <div class="metric-number" id="footerTotalEpisodes">—</div>
+                            <div class="metric-label">Total Episode</div>
+                        </div>
+                        <div class="metric-item">
+                            <div class="metric-number" id="footerLastUpdated">—</div>
+                            <div class="metric-label">Update Terakhir</div>
+                        </div>
+                    </div>
+                    <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                        <a href="index.html" class="btn-primary"><i class="fas fa-play"></i> Mulai Streaming
+                            Sekarang</a>
+                        <a href="schedule.html" class="btn-primary" style="background: transparent;"><i
+                                class="fas fa-calendar-alt"></i> Lihat Jadwal Rilis</a>
+                    </div>
+                    <div style="margin-top: 2rem; font-size: 0.75rem; color: var(--text-muted);">
+                        <i class="fab fa-tiktok"></i> @ikyletwar &nbsp;|&nbsp; <i class="fab fa-instagram"></i>
+                        ikyletwar &nbsp;|&nbsp; <i class="fab fa-whatsapp"></i> +62 823-2239-5337<br>
+                        © 2026 ZeroStream — Dibangun oleh Hizkia Letwar, siswa SMK Negeri 1 Maluku Tengah
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <script src="js/common.js"></script>
+    <script src="js/settings.js"></script>
+    <script src="js/websocket.js"></script>
+
+    <script>
+        // === GSAP Animation & ScrollTrigger ===
+        gsap.registerPlugin(ScrollTrigger);
+
+        // Reveal semua elemen dengan class gsap-reveal
+        gsap.utils.toArray('.gsap-reveal').forEach((elem) => {
+            gsap.fromTo(elem,
+                { opacity: 0, y: 40 },
+                {
+                    opacity: 1,
+                    y: 0,
+                    duration: 0.8,
+                    ease: "power2.out",
+                    scrollTrigger: {
+                        trigger: elem,
+                        start: "top 85%",
+                        toggleActions: "play none none reverse"
+                    }
+                }
+            );
+        });
+
+        // Stagger untuk feature cards
+        gsap.fromTo('.feature-card',
+            { opacity: 0, y: 30 },
+            {
+                opacity: 1,
+                y: 0,
+                duration: 0.6,
+                stagger: 0.08,
+                scrollTrigger: {
+                    trigger: '.features-grid',
+                    start: "top 85%",
+                }
+            }
+        );
+
+        // Progress bar scroll
+        window.addEventListener('scroll', () => {
+            const winScroll = document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - window.innerHeight;
+            const scrolled = (winScroll / height) * 100;
+            document.getElementById('scrollProgress').style.width = scrolled + '%';
+            const backBtn = document.getElementById('backToTopBtn');
+            if (winScroll > 300) backBtn.classList.add('visible');
+            else backBtn.classList.remove('visible');
+        });
+
+        document.getElementById('backToTopBtn').addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        // Back button
+        document.getElementById('back-btn')?.addEventListener('click', () => window.history.back());
+
+        // FAQ Accordion
+        document.querySelectorAll('.faq-item').forEach(item => {
+            const btn = item.querySelector('.faq-question');
+            btn.addEventListener('click', () => {
+                item.classList.toggle('open');
+            });
+        });
+
+        // === Fetch stats with counter animation (GSAP) ===
+        async function fetchStats() {
+            try {
+                const res = await fetch('/api/anime/stats');
+                const data = await res.json();
+                if (!data.success) throw new Error();
+                const stats = data.stats;
+                const totalAnime = stats.total_anime || 0;
+                const totalEpisodes = stats.total_episodes || 0;
+                const ongoing = stats.ongoing_anime || 0;
+                const complete = stats.complete_anime || 0;
+                const lastUpdated = stats.last_updated ? new Date(stats.last_updated).toLocaleDateString('id-ID') : 'Belum ada';
+
+                // GSAP number counter
+                function animateNumber(element, target) {
+                    if (!element) return;
+                    gsap.to({ val: 0 }, {
+                        val: target,
+                        duration: 1.5,
+                        ease: "power2.out",
+                        onUpdate: function () {
+                            element.textContent = Math.floor(this.targets()[0].val).toLocaleString('id-ID');
+                        },
+                        onComplete: () => { element.textContent = target.toLocaleString('id-ID'); }
+                    });
+                }
+                animateNumber(document.getElementById('statTotalAnime'), totalAnime);
+                animateNumber(document.getElementById('statTotalEpisodes'), totalEpisodes);
+                animateNumber(document.getElementById('statOngoing'), ongoing);
+                animateNumber(document.getElementById('statComplete'), complete);
+                document.getElementById('statLastUpdated').textContent = lastUpdated;
+
+                document.getElementById('footerTotalAnime').textContent = totalAnime.toLocaleString('id-ID');
+                document.getElementById('footerTotalEpisodes').textContent = totalEpisodes.toLocaleString('id-ID');
+                document.getElementById('footerLastUpdated').textContent = lastUpdated;
+            } catch (e) { console.error(e); }
+        }
+
+        // Trigger counter when stats section visible
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    fetchStats();
+                    observer.disconnect();
+                }
+            });
+        }, { threshold: 0.3 });
+        observer.observe(document.getElementById('statsSection'));
+
+        // WebSocket refresh listener
+        if (window.onRealtimeEvent) {
+            window.onRealtimeEvent('NEW_EPISODE', () => setTimeout(fetchStats, 2000));
+            window.onRealtimeEvent('ANIME_UPDATED', () => setTimeout(fetchStats, 2000));
+        }
+    </script>
+</body>
+
+</html>
